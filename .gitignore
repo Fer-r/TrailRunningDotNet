@@ -313,6 +313,8 @@ node_modules/
 *.ncb
 *.aps
 
+./.gemini/*
+
 # Visual Studio LightSwitch build output
 **/*.HTMLClient/GeneratedArtifacts
 **/*.DesktopClient/GeneratedArtifacts
