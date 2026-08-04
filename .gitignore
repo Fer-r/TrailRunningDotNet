@@ -313,7 +313,7 @@ node_modules/
 *.ncb
 *.aps
 
-./.gemini/*
+.gemini/*
 
 # Visual Studio LightSwitch build output
 **/*.HTMLClient/GeneratedArtifacts
@@ -482,3 +482,4 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
