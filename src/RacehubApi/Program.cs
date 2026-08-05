@@ -22,6 +22,7 @@ builder.Services.AddDbContext<RacehubContext>(options =>
 // Register Services
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<RaceService>();
+builder.Services.AddScoped<IParticipantService, ParticipantService>();
 
 // Configuración CORS (Frontend Vite React)
 builder.Services.AddCors(options =>

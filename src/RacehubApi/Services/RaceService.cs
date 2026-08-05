@@ -26,7 +26,7 @@ public class RaceService(RacehubContext context)
                 r.Category,
                 r.Image,
                 r.Gender,
-                r.TrailRunningParticipants.Select(p => new ParticipantDto(
+                r.TrailRunningParticipants.Select(p => new RaceParticipantDto(
                     p.Id,
                     p.UserId,
                     p.TrailRunningId,
@@ -59,7 +59,7 @@ public class RaceService(RacehubContext context)
                 r.Category,
                 r.Image,
                 r.Gender,
-                r.TrailRunningParticipants.Select(p => new ParticipantDto(
+                r.TrailRunningParticipants.Select(p => new RaceParticipantDto(
                     p.Id,
                     p.UserId,
                     p.TrailRunningId,

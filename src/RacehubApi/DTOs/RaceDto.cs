@@ -17,10 +17,10 @@ public record RaceDto(
     string? Category,
     [property: JsonPropertyName("img")] string? Image,
     string? Gender,
-    [property: JsonPropertyName("trailRunningParticipants")] IReadOnlyList<ParticipantDto> TrailRunningParticipants
+    [property: JsonPropertyName("trailRunningParticipants")] IReadOnlyList<RaceParticipantDto> TrailRunningParticipants
 );
 
-public record ParticipantDto(
+public record RaceParticipantDto(
     int Id,
     int UserId,
     int TrailRunningId,
