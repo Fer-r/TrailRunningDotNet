@@ -2,11 +2,20 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
+using Microsoft.EntityFrameworkCore;
+using RacehubApi.Data;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddRazorPages();
+
+// Configure EF Core SQLite
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<RacehubContext>(options =>
+    options.UseSqlite(connectionString));
 
 // Configuración CORS (Frontend Vite React)
 builder.Services.AddCors(options =>
