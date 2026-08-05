@@ -77,4 +77,11 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapRazorPages();
 
+// Seed initial data
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<RacehubContext>();
+    SeedData.Initialize(context);
+}
+
 app.Run();
