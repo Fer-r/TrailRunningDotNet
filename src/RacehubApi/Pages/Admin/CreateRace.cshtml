@@ -1,0 +1,153 @@
+@page
+@model RacehubApi.Pages.Admin.CreateRaceModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo evento de trailrunning</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #003d5c;
+            --secondary: #007f80;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #e8ecf1; }
+
+        .form-container {
+            max-width: 800px; margin: 2rem auto; padding: 2rem;
+            background: var(--light); border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .page-title {
+            color: var(--primary); margin-bottom: 2rem;
+            padding-bottom: 1rem; border-bottom: 2px solid var(--secondary);
+        }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--primary); }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 8px;
+            font-size: 0.95rem; transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(0,127,128,0.15);
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            border: none; color: white; padding: 12px 30px; border-radius: 8px;
+            cursor: pointer; font-weight: 600; font-size: 1rem;
+            transition: transform 0.2s; width: 100%; margin-top: 10px;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,127,128,0.3); }
+        .btn-back {
+            background: var(--secondary); color: white; padding: 10px 20px;
+            border-radius: 8px; text-decoration: none; display: inline-block;
+            margin-top: 1rem; transition: all 0.3s ease; font-weight: 600;
+        }
+        .btn-back:hover { background: var(--primary); transform: translateY(-2px); }
+        .alert-error {
+            background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24;
+            padding: 12px 20px; border-radius: 8px; margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1 class="page-title">
+            <i class="fas fa-mountain"></i>
+            Crear Nuevo Evento de Trailrunning
+        </h1>
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert-error">@Model.ErrorMessage</div>
+        }
+
+        <form method="post">
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label for="name">Nombre *</label>
+                    <input id="name" name="Name" type="text" required value="@Model.Name"
+                           placeholder="Ej: Ultra Trail Sierra Nevada">
+                </div>
+                <div class="form-group full">
+                    <label for="description">Descripción</label>
+                    <textarea id="description" name="Description" rows="3"
+                              placeholder="Descripción del evento...">@Model.Description</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="date">Fecha *</label>
+                    <input id="date" name="Date" type="date" required value="@Model.Date.ToString("yyyy-MM-dd")">
+                </div>
+                <div class="form-group">
+                    <label for="distanceKm">Distancia (km) *</label>
+                    <input id="distanceKm" name="DistanceKm" type="number" min="1" required value="@Model.DistanceKm">
+                </div>
+                <div class="form-group">
+                    <label for="location">Ubicación *</label>
+                    <input id="location" name="Location" type="text" required value="@Model.Location"
+                           placeholder="Ej: Granada, Andalucía">
+                </div>
+                <div class="form-group">
+                    <label for="coordinates">Coordenadas</label>
+                    <input id="coordinates" name="Coordinates" type="text" value="@Model.Coordinates"
+                           placeholder="Ej: 37.0886,-3.5908">
+                </div>
+                <div class="form-group">
+                    <label for="unevenness">Desnivel (m)</label>
+                    <input id="unevenness" name="Unevenness" type="number" min="0" value="@Model.Unevenness">
+                </div>
+                <div class="form-group">
+                    <label for="entryFee">Precio inscripción (€) *</label>
+                    <input id="entryFee" name="EntryFee" type="number" min="0" required value="@Model.EntryFee">
+                </div>
+                <div class="form-group">
+                    <label for="availableSlots">Plazas disponibles *</label>
+                    <input id="availableSlots" name="AvailableSlots" type="number" min="1" required value="@Model.AvailableSlots">
+                </div>
+                <div class="form-group">
+                    <label for="status">Estado *</label>
+                    <select id="status" name="Status">
+                        <option value="open" selected="@(Model.Status == "open")">Open</option>
+                        <option value="closed" selected="@(Model.Status == "closed")">Closed</option>
+                        <option value="completed" selected="@(Model.Status == "completed")">Completed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="category">Categoría</label>
+                    <input id="category" name="Category" type="text" value="@Model.Category"
+                           placeholder="Ej: trail, ultra, maraton">
+                </div>
+                <div class="form-group">
+                    <label for="gender">Género *</label>
+                    <select id="gender" name="Gender">
+                        <option value="m" selected="@(Model.Gender == "m")">Male</option>
+                        <option value="f" selected="@(Model.Gender == "f")">Female</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label for="image">URL de imagen</label>
+                    <input id="image" name="Image" type="text" value="@Model.Image"
+                           placeholder="https://ejemplo.com/imagen.jpg">
+                </div>
+            </div>
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-check"></i> Save
+            </button>
+        </form>
+
+        <a href="/Admin" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Volver al listado
+        </a>
+    </div>
+</body>
+</html>
