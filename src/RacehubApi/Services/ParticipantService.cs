@@ -32,7 +32,8 @@ public partial class ParticipantService : IParticipantService
                     p.User.Age,
                     p.User.Gender,
                     p.User.Image,
-                    p.User.Banned
+                    p.User.Banned,
+                    new List<ParticipantDto>()
                 ),
                 TrailRunning = new RaceDto(
                     p.TrailRunning.Id,
@@ -74,7 +75,8 @@ public partial class ParticipantService : IParticipantService
                     p.User.Age,
                     p.User.Gender,
                     p.User.Image,
-                    p.User.Banned
+                    p.User.Banned,
+                    new List<ParticipantDto>()
                 ),
                 TrailRunning = new RaceDto(
                     p.TrailRunning.Id,

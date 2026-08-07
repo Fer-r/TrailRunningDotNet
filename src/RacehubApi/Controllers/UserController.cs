@@ -20,7 +20,11 @@ public class UserController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<UserDto>> GetUserById(int id)
     {
-        var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+        var user = await _context.Users
+            .Include(u => u.TrailRunningParticipants)
+                .ThenInclude(p => p.TrailRunning)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == id);
         
         if (user == null)
             return NotFound(new { error = "User not found" });
@@ -33,7 +37,31 @@ public class UserController : ControllerBase
             user.Age,
             user.Gender,
             user.Image,
-            user.Banned
+            user.Banned,
+            user.TrailRunningParticipants.Select(p => new ParticipantDto
+            {
+                Id = p.Id,
+                Dorsal = p.Dorsal,
+                Time = p.Time,
+                Banned = p.Banned,
+                TrailRunning = new RaceDto(
+                    p.TrailRunning.Id,
+                    p.TrailRunning.Name,
+                    p.TrailRunning.Description,
+                    p.TrailRunning.Date,
+                    p.TrailRunning.DistanceKm,
+                    p.TrailRunning.Location,
+                    p.TrailRunning.Coordinates,
+                    p.TrailRunning.Unevenness,
+                    p.TrailRunning.EntryFee,
+                    p.TrailRunning.AvailableSlots,
+                    p.TrailRunning.Status,
+                    p.TrailRunning.Category,
+                    p.TrailRunning.Image,
+                    p.TrailRunning.Gender,
+                    new List<RaceParticipantDto>()
+                )
+            }).ToList()
         );
 
         return Ok(userDto);

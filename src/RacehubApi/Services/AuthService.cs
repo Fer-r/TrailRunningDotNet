@@ -13,7 +13,10 @@ public class AuthService(RacehubContext context, IConfiguration configuration)
 {
     public async Task<AuthResponseDto?> AuthenticateAsync(LoginDto loginDto)
     {
-        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+        var user = await context.Users
+            .Include(u => u.TrailRunningParticipants)
+                .ThenInclude(p => p.TrailRunning)
+            .FirstOrDefaultAsync(u => u.Email == loginDto.Email);
         
         if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
         {
@@ -35,7 +38,31 @@ public class AuthService(RacehubContext context, IConfiguration configuration)
             user.Age,
             user.Gender,
             user.Image,
-            user.Banned
+            user.Banned,
+            user.TrailRunningParticipants.Select(p => new ParticipantDto
+            {
+                Id = p.Id,
+                Dorsal = p.Dorsal,
+                Time = p.Time,
+                Banned = p.Banned,
+                TrailRunning = new RaceDto(
+                    p.TrailRunning.Id,
+                    p.TrailRunning.Name,
+                    p.TrailRunning.Description,
+                    p.TrailRunning.Date,
+                    p.TrailRunning.DistanceKm,
+                    p.TrailRunning.Location,
+                    p.TrailRunning.Coordinates,
+                    p.TrailRunning.Unevenness,
+                    p.TrailRunning.EntryFee,
+                    p.TrailRunning.AvailableSlots,
+                    p.TrailRunning.Status,
+                    p.TrailRunning.Category,
+                    p.TrailRunning.Image,
+                    p.TrailRunning.Gender,
+                    new List<RaceParticipantDto>()
+                )
+            }).ToList()
         );
 
         return new AuthResponseDto(token, userDto);

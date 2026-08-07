@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace RacehubApi.DTOs;
 
 public record UserDto(
@@ -8,7 +10,8 @@ public record UserDto(
     int? Age,
     string? Gender,
     string? Image,
-    bool Banned
+    bool Banned,
+    [property: JsonPropertyName("trailRunningParticipants")] IReadOnlyList<ParticipantDto> TrailRunningParticipants
 );
 
 public record AuthResponseDto(
