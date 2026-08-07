@@ -1,0 +1,162 @@
+@page
+@model RacehubApi.Pages.CreateRaceModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Carrera - Racehub Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white p-8 rounded-lg shadow-md">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">🏔️ Crear Nueva Carrera</h2>
+                <a href="http://localhost:5173" class="text-blue-500 hover:text-blue-800 text-sm">← Volver al inicio</a>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+            {
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                    ✅ @Model.SuccessMessage
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    @Model.ErrorMessage
+                </div>
+            }
+
+            <form method="post">
+                <!-- Nombre -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Nombre de la carrera *</label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           id="name" name="Name" type="text" required value="@Model.Name"
+                           placeholder="Ej: Ultra Trail Sierra Nevada">
+                </div>
+
+                <!-- Descripción -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="description">Descripción</label>
+                    <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              id="description" name="Description" rows="3"
+                              placeholder="Descripción de la carrera...">@Model.Description</textarea>
+                </div>
+
+                <!-- Fecha y Distancia -->
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="date">Fecha *</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               id="date" name="Date" type="date" required value="@Model.Date.ToString("yyyy-MM-dd")">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="distanceKm">Distancia (km) *</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               id="distanceKm" name="DistanceKm" type="number" min="1" required value="@Model.DistanceKm">
+                    </div>
+                </div>
+
+                <!-- Ubicación y Coordenadas -->
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="location">Ubicación *</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               id="location" name="Location" type="text" required value="@Model.Location"
+                               placeholder="Ej: Granada, Andalucía">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="coordinates">Coordenadas</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               id="coordinates" name="Coordinates" type="text" value="@Model.Coordinates"
+                               placeholder="Ej: 37.0886,-3.5908">
+                    </div>
+                </div>
+
+                <!-- Desnivel y Precio -->
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="unevenness">Desnivel (m)</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               id="unevenness" name="Unevenness" type="number" min="0" value="@Model.Unevenness">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="entryFee">Precio inscripción (€) *</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               id="entryFee" name="EntryFee" type="number" min="0" required value="@Model.EntryFee">
+                    </div>
+                </div>
+
+                <!-- Plazas y Estado -->
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="availableSlots">Plazas disponibles *</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               id="availableSlots" name="AvailableSlots" type="number" min="1" required value="@Model.AvailableSlots">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="status">Estado</label>
+                        <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                id="status" name="Status">
+                            <option value="open" selected="@(Model.Status == "open")">Abierta</option>
+                            <option value="closed" selected="@(Model.Status == "closed")">Cerrada</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Categoría y Género -->
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="category">Categoría</label>
+                        <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                id="category" name="Category">
+                            <option value="trail">Trail</option>
+                            <option value="ultra">Ultra</option>
+                            <option value="maraton">Maratón</option>
+                            <option value="media">Media Maratón</option>
+                            <option value="corta">Corta distancia</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="gender">Género</label>
+                        <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                id="gender" name="Gender">
+                            <option value="">Mixta</option>
+                            <option value="Male">Masculina</option>
+                            <option value="Female">Femenina</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Imagen URL -->
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="image">URL de imagen</label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           id="image" name="Image" type="text" value="@Model.Image"
+                           placeholder="https://ejemplo.com/imagen.jpg">
+                </div>
+
+                <!-- Botón -->
+                <div class="flex items-center justify-between">
+                    <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline w-full transition-colors" type="submit">
+                        🏁 Crear Carrera
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Info -->
+        <div class="mt-4 text-center text-gray-500 text-sm">
+            <p>Panel de administración de Racehub — Las carreras creadas aparecerán inmediatamente en la web.</p>
+        </div>
+    </div>
+</body>
+</html>
