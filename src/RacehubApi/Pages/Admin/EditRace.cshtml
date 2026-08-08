@@ -58,6 +58,15 @@
             background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24;
             padding: 12px 20px; border-radius: 8px; margin-bottom: 15px;
         }
+        .file-upload {
+            border: 2px dashed #ccc; border-radius: 8px; padding: 20px;
+            text-align: center; cursor: pointer; transition: border-color 0.2s;
+        }
+        .file-upload:hover { border-color: var(--secondary); }
+        .file-upload input[type="file"] { display: none; }
+        .file-upload .icon { font-size: 2rem; color: #aaa; margin-bottom: 8px; }
+        .file-upload p { color: #666; font-size: 0.9rem; }
+        .current-image { max-height: 150px; border-radius: 8px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -72,7 +81,7 @@
             <div class="alert-error">@Model.ErrorMessage</div>
         }
 
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <input type="hidden" name="RaceId" value="@Model.RaceId" />
             <div class="form-grid">
                 <div class="form-group full">
@@ -131,8 +140,20 @@
                     </select>
                 </div>
                 <div class="form-group full">
-                    <label for="image">URL de imagen</label>
-                    <input id="image" name="Image" type="text" value="@Model.Image">
+                    <label>Imagen de la carrera</label>
+                    @if (!string.IsNullOrEmpty(Model.CurrentImage))
+                    {
+                        <div style="margin-bottom: 10px;">
+                            <p style="font-size: 0.85rem; color: #666; margin-bottom: 6px;">Imagen actual:</p>
+                            <img src="@Model.CurrentImage" alt="Imagen actual" class="current-image" />
+                        </div>
+                    }
+                    <div class="file-upload" onclick="document.getElementById('imageFile').click()">
+                        <input id="imageFile" name="ImageFile" type="file" accept="image/*" onchange="previewImage(this)">
+                        <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                        <p id="fileName">@(string.IsNullOrEmpty(Model.CurrentImage) ? "Haz clic para subir una imagen" : "Haz clic para cambiar la imagen")</p>
+                        <img id="imagePreview" style="display:none; max-height:150px; margin-top:10px; border-radius:8px;" />
+                    </div>
                 </div>
             </div>
             <button type="submit" class="btn-submit">
@@ -144,5 +165,21 @@
             <i class="fas fa-arrow-left"></i> back to list
         </a>
     </div>
+
+    <script>
+        function previewImage(input) {
+            var preview = document.getElementById('imagePreview');
+            var fileName = document.getElementById('fileName');
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+                fileName.textContent = input.files[0].name;
+            }
+        }
+    </script>
 </body>
 </html>

@@ -74,6 +74,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles(); // Serve wwwroot/uploads images
 app.UseRouting();
 
 app.UseCors();

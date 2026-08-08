@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FaLocationDot } from "react-icons/fa6";
 import { FiCalendar } from "react-icons/fi";
 import defaultTrailImage from "../assets/default-trail.jpg";
+import { resolveImageUrl } from "../utils/imageUtils";
 
 const RaceCard = ({ race, distance }) => {
   const handleImageError = (e) => {
@@ -17,7 +18,7 @@ const RaceCard = ({ race, distance }) => {
         <div className="flex flex-col sm:flex-row h-auto sm:h-36">
           <div className="w-full sm:w-1/4 h-48 sm:h-full relative">
             <img
-              src={race?.img || defaultTrailImage}
+              src={resolveImageUrl(race?.img) || defaultTrailImage}
               alt={race?.name}
               className="w-full h-full object-cover"
               loading="lazy"

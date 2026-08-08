@@ -5,7 +5,7 @@ using RacehubApi.Models;
 
 namespace RacehubApi.Pages.Admin;
 
-public class EditRaceModel(RacehubContext context) : PageModel
+public class EditRaceModel(RacehubContext context, IWebHostEnvironment env) : PageModel
 {
     [BindProperty] public int RaceId { get; set; }
     [BindProperty] public string Name { get; set; } = "";
@@ -19,9 +19,10 @@ public class EditRaceModel(RacehubContext context) : PageModel
     [BindProperty] public int AvailableSlots { get; set; }
     [BindProperty] public string Status { get; set; } = "open";
     [BindProperty] public string? Category { get; set; }
-    [BindProperty] public string? Image { get; set; }
+    [BindProperty] public IFormFile? ImageFile { get; set; }
     [BindProperty] public string? Gender { get; set; }
 
+    public string? CurrentImage { get; set; }
     public string? ErrorMessage { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int id)
@@ -41,7 +42,7 @@ public class EditRaceModel(RacehubContext context) : PageModel
         AvailableSlots = race.AvailableSlots;
         Status = race.Status;
         Category = race.Category;
-        Image = race.Image;
+        CurrentImage = race.Image;
         Gender = race.Gender;
 
         return Page();
@@ -56,6 +57,30 @@ public class EditRaceModel(RacehubContext context) : PageModel
             return Page();
         }
 
+        // Handle image upload
+        if (ImageFile is { Length: > 0 })
+        {
+            // Delete old image if it exists
+            if (!string.IsNullOrEmpty(race.Image))
+            {
+                var oldPath = Path.Combine(env.WebRootPath, race.Image.TrimStart('/'));
+                if (System.IO.File.Exists(oldPath))
+                    System.IO.File.Delete(oldPath);
+            }
+
+            var uploadsDir = Path.Combine(env.WebRootPath, "uploads");
+            Directory.CreateDirectory(uploadsDir);
+
+            var ext = Path.GetExtension(ImageFile.FileName);
+            var fileName = $"{Guid.NewGuid()}{ext}";
+            var filePath = Path.Combine(uploadsDir, fileName);
+
+            await using var stream = new FileStream(filePath, FileMode.Create);
+            await ImageFile.CopyToAsync(stream);
+
+            race.Image = $"/uploads/{fileName}";
+        }
+
         race.Name = Name;
         race.Description = Description;
         race.Date = Date;
@@ -67,7 +92,6 @@ public class EditRaceModel(RacehubContext context) : PageModel
         race.AvailableSlots = AvailableSlots;
         race.Status = Status;
         race.Category = Category;
-        race.Image = Image;
         race.Gender = Gender;
 
         await context.SaveChangesAsync();

@@ -8,6 +8,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import defaultTrailImage from "../assets/default-trail.jpg";
+import { resolveImageUrl } from "../utils/imageUtils";
 import { CiCalendar } from "react-icons/ci";
 import { GiLevelEndFlag, GiPathDistance } from "react-icons/gi";
 import { FaLocationDot } from "react-icons/fa6";
@@ -101,7 +102,7 @@ const RaceDetail = () => {
         {/* Imagen de la carrera */}
         <div className="relative h-64 sm:h-96 w-full">
           <img
-            src={race?.img || defaultTrailImage}
+            src={resolveImageUrl(race?.img) || defaultTrailImage}
             alt={race?.name}
             className="w-full h-full object-cover"
             onError={(e) => {

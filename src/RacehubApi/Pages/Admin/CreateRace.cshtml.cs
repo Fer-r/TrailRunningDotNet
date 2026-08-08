@@ -5,7 +5,7 @@ using RacehubApi.Models;
 
 namespace RacehubApi.Pages.Admin;
 
-public class CreateRaceModel(RacehubContext context) : PageModel
+public class CreateRaceModel(RacehubContext context, IWebHostEnvironment env) : PageModel
 {
     [BindProperty] public string Name { get; set; } = "";
     [BindProperty] public string Description { get; set; } = "";
@@ -18,7 +18,7 @@ public class CreateRaceModel(RacehubContext context) : PageModel
     [BindProperty] public int AvailableSlots { get; set; } = 100;
     [BindProperty] public string Status { get; set; } = "open";
     [BindProperty] public string? Category { get; set; }
-    [BindProperty] public string? Image { get; set; }
+    [BindProperty] public IFormFile? ImageFile { get; set; }
     [BindProperty] public string? Gender { get; set; }
 
     public string? ErrorMessage { get; set; }
@@ -31,6 +31,22 @@ public class CreateRaceModel(RacehubContext context) : PageModel
         {
             ErrorMessage = "El nombre y la ubicación son obligatorios.";
             return Page();
+        }
+
+        string? imagePath = null;
+        if (ImageFile is { Length: > 0 })
+        {
+            var uploadsDir = Path.Combine(env.WebRootPath, "uploads");
+            Directory.CreateDirectory(uploadsDir);
+
+            var ext = Path.GetExtension(ImageFile.FileName);
+            var fileName = $"{Guid.NewGuid()}{ext}";
+            var filePath = Path.Combine(uploadsDir, fileName);
+
+            await using var stream = new FileStream(filePath, FileMode.Create);
+            await ImageFile.CopyToAsync(stream);
+
+            imagePath = $"/uploads/{fileName}";
         }
 
         var race = new TrailRunning
@@ -46,7 +62,7 @@ public class CreateRaceModel(RacehubContext context) : PageModel
             AvailableSlots = AvailableSlots,
             Status = Status,
             Category = Category,
-            Image = Image,
+            Image = imagePath,
             Gender = Gender
         };
 
