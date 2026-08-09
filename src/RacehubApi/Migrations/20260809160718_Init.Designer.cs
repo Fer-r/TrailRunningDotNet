@@ -11,8 +11,8 @@ using RacehubApi.Data;
 namespace RacehubApi.Migrations
 {
     [DbContext(typeof(RacehubContext))]
-    [Migration("20260809155840_RemoveRaceGender")]
-    partial class RemoveRaceGender
+    [Migration("20260809160718_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
