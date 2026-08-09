@@ -1,5 +1,5 @@
 @page
-@model RacehubApi.Pages.Admin.IndexModel
+@model RacehubApi.Pages.Admin.UsersModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = null;
@@ -9,7 +9,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eventos - Panel de Administración</title>
+    <title>Usuarios - Panel de Administración</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -87,9 +87,13 @@
         }
         .btn-delete:hover { color: #c0392b; }
 
-        .status-badge { padding: 4px 10px; border-radius: 5px; font-weight: bold; color: white; font-size: 0.85rem; }
+        .btn-success {
+            color: #2ecc71; border: none; background: none;
+            cursor: pointer; font-weight: 600; padding: 0; font-size: 0.85rem;
+        }
+        .btn-success:hover { color: #27ae60; }
 
-        .image-thumbnail { max-width: 80px; height: auto; border-radius: 4px; }
+        .status-badge { padding: 4px 10px; border-radius: 5px; font-weight: bold; color: white; font-size: 0.85rem; }
 
         .alert-success {
             background: #d4edda; border: 1px solid #c3e6cb; color: #155724;
@@ -98,15 +102,12 @@
         .alert-info {
             text-align: center; font-size: 1.1rem; color: var(--accent); padding: 20px;
         }
-        .nav-links { display: flex; gap: 10px; margin-bottom: 10px; padding: 0 20px; }
-        .nav-links a { color: var(--primary); text-decoration: none; font-weight: 600; }
-        .nav-links a:hover { color: var(--accent); }
     </style>
 </head>
 <body>
     <div style="margin-top: 20px; padding: 0 20px; display: flex; gap: 10px;">
-        <a href="http://localhost:5173" class="btn-primary">
-            <i class="fas fa-arrow-left"></i> Volver al Frontend
+        <a href="/Admin" class="btn-primary" style="background: linear-gradient(135deg, var(--secondary), var(--primary));">
+            <i class="fas fa-arrow-left"></i> Volver a Eventos
         </a>
         <a href="/Admin/Logout" class="btn-delete" style="text-decoration: none; padding: 8px 16px;">
             <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
@@ -116,17 +117,9 @@
     <div class="admin-container">
         <header>
             <h1 class="admin-title">
-                <i class="fas fa-calendar-alt"></i>
-                Eventos de TrailRunning
+                <i class="fas fa-users"></i>
+                Gestión de Usuarios
             </h1>
-            <div>
-                <a href="/Admin/Users" class="btn-primary" style="margin-right: 10px; background: linear-gradient(135deg, var(--secondary), var(--primary));">
-                    <i class="fas fa-users"></i> Gestión Usuarios
-                </a>
-                <a href="/Admin/CreateRace" class="btn-new">
-                    <i class="fas fa-plus"></i> Nuevo Evento
-                </a>
-            </div>
         </header>
 
         <main>
@@ -140,75 +133,52 @@
                     <tr>
                         <th>Id</th>
                         <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Fecha</th>
-                        <th>Distancia (km)</th>
-                        <th>Ubicación</th>
-                        <th>Coordenadas</th>
-                        <th>Desnivel</th>
-                        <th>Precio</th>
-                        <th>Plazas</th>
-                        <th>Inscritos</th>
+                        <th>Email</th>
+                        <th>Edad</th>
+                        <th>Género</th>
+                        <th>Roles</th>
                         <th>Estado</th>
-                        <th>Categoría</th>
-                        <th>Imagen</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model.TrailRunnings.Any())
+                    @if (Model.Users.Any())
                     {
-                        @foreach (var race in Model.TrailRunnings)
+                        @foreach (var user in Model.Users)
                         {
                             <tr>
-                                <td>@race.Id</td>
-                                <td>@race.Name</td>
-                                <td title="@race.Description">@(race.Description.Length > 40 ? race.Description[..40] + "..." : race.Description)</td>
-                                <td>@race.Date.ToString("yyyy-MM-dd")</td>
-                                <td>@race.DistanceKm</td>
-                                <td>@race.Location</td>
-                                <td>@(race.Coordinates ?? "—")</td>
-                                <td>@(race.Unevenness?.ToString() ?? "—")</td>
-                                <td>@race.EntryFee €</td>
-                                <td>@race.AvailableSlots</td>
+                                <td>@user.Id</td>
+                                <td>@user.Name</td>
+                                <td>@user.Email</td>
+                                <td>@(user.Age?.ToString() ?? "—")</td>
+                                <td>@(user.Gender ?? "—")</td>
+                                <td>@user.Roles</td>
                                 <td>
-                                    <span style="font-weight: 600; color: @(race.TrailRunningParticipants.Count >= race.AvailableSlots ? "#e74c3c" : "#2ecc71");">@race.TrailRunningParticipants.Count</span> / @race.AvailableSlots
-                                </td>
-                                <td>
-                                    @{
-                                        var statusColor = race.Status switch
-                                        {
-                                            "open" => "#2ecc71",
-                                            "closed" => "#f1c40f",
-                                            "completed" => "#e74c3c",
-                                            _ => "#95a5a6"
-                                        };
-                                    }
-                                    <span class="status-badge" style="background-color: @statusColor;">
-                                        @race.Status.ToUpper()
-                                    </span>
-                                </td>
-                                <td>@(race.Category ?? "N/A")</td>
-                                <td>
-                                    @if (!string.IsNullOrEmpty(race.Image))
+                                    @if (user.Banned)
                                     {
-                                        <img src="@race.Image" alt="@race.Name" class="image-thumbnail">
+                                        <span class="status-badge" style="background-color: #e74c3c;">BANEADO</span>
                                     }
                                     else
                                     {
-                                        <span>Sin imagen</span>
+                                        <span class="status-badge" style="background-color: #2ecc71;">ACTIVO</span>
                                     }
                                 </td>
                                 <td class="action-buttons">
-                                    <a href="/Admin/EditRace?id=@race.Id">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </a>
-                                    <form method="post" asp-page-handler="Delete" style="display: inline;"
-                                          onsubmit="return confirm('¿Estás seguro que deseas eliminar este evento?');">
-                                        <input type="hidden" name="id" value="@race.Id" />
-                                        <button type="submit" class="btn-delete">
-                                            <i class="fas fa-trash"></i> Eliminar
-                                        </button>
+                                    <form method="post" asp-page-handler="ToggleBan" style="display: inline;"
+                                          onsubmit="return confirm('¿Estás seguro que deseas @(user.Banned ? "desbanear" : "banear") a este usuario?');">
+                                        <input type="hidden" name="id" value="@user.Id" />
+                                        @if (user.Banned)
+                                        {
+                                            <button type="submit" class="btn-success">
+                                                <i class="fas fa-check"></i> Desbanear
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn-delete">
+                                                <i class="fas fa-ban"></i> Banear
+                                            </button>
+                                        }
                                     </form>
                                 </td>
                             </tr>
@@ -217,7 +187,7 @@
                     else
                     {
                         <tr>
-                            <td colspan="15" class="alert-info">No hay eventos registrados</td>
+                            <td colspan="8" class="alert-info">No hay usuarios registrados</td>
                         </tr>
                     }
                 </tbody>
