@@ -16,7 +16,6 @@ public record RaceDto(
     string Status,
     string? Category,
     [property: JsonPropertyName("img")] string? Image,
-    string? Gender,
     [property: JsonPropertyName("trailRunningParticipants")] IReadOnlyList<RaceParticipantDto> TrailRunningParticipants
 );
 

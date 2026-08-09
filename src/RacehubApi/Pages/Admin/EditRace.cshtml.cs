@@ -20,7 +20,6 @@ public class EditRaceModel(RacehubContext context, IWebHostEnvironment env) : Pa
     [BindProperty] public string Status { get; set; } = "open";
     [BindProperty] public List<string> SelectedCategories { get; set; } = new();
     [BindProperty] public IFormFile? ImageFile { get; set; }
-    [BindProperty] public string? Gender { get; set; }
 
     public string? CurrentImage { get; set; }
     public string? ErrorMessage { get; set; }
@@ -46,7 +45,6 @@ public class EditRaceModel(RacehubContext context, IWebHostEnvironment env) : Pa
             SelectedCategories = race.Category.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
         }
         CurrentImage = race.Image;
-        Gender = race.Gender;
 
         return Page();
     }
@@ -95,7 +93,6 @@ public class EditRaceModel(RacehubContext context, IWebHostEnvironment env) : Pa
         race.AvailableSlots = AvailableSlots;
         race.Status = Status;
         race.Category = SelectedCategories.Count > 0 ? string.Join(", ", SelectedCategories) : null;
-        race.Gender = Gender;
 
         await context.SaveChangesAsync();
 

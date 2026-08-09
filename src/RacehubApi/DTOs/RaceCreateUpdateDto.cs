@@ -15,8 +15,7 @@ public record RaceCreateDto(
     [property: JsonPropertyName("available_slots")] int AvailableSlots,
     string Status,
     string? Category,
-    [property: JsonPropertyName("img")] string? Image,
-    string? Gender
+    [property: JsonPropertyName("img")] string? Image
 );
 
 public record RaceUpdateDto(
@@ -31,6 +30,5 @@ public record RaceUpdateDto(
     [property: JsonPropertyName("available_slots")] int? AvailableSlots,
     string? Status,
     string? Category,
-    [property: JsonPropertyName("img")] string? Image,
-    string? Gender
+    [property: JsonPropertyName("img")] string? Image
 );

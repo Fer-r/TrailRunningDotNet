@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RacehubApi.Data;
 
@@ -10,9 +11,11 @@ using RacehubApi.Data;
 namespace RacehubApi.Migrations
 {
     [DbContext(typeof(RacehubContext))]
-    partial class RacehubContextModelSnapshot : ModelSnapshot
+    [Migration("20260809155840_RemoveRaceGender")]
+    partial class RemoveRaceGender
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.10");

@@ -59,7 +59,6 @@ public class AuthService(RacehubContext context, IConfiguration configuration)
                     p.TrailRunning.Status,
                     p.TrailRunning.Category,
                     p.TrailRunning.Image,
-                    p.TrailRunning.Gender,
                     new List<RaceParticipantDto>()
                 )
             }).ToList()

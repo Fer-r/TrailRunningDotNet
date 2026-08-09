@@ -19,7 +19,6 @@ public class CreateRaceModel(RacehubContext context, IWebHostEnvironment env) : 
     [BindProperty] public string Status { get; set; } = "open";
     [BindProperty] public List<string> SelectedCategories { get; set; } = new();
     [BindProperty] public IFormFile? ImageFile { get; set; }
-    [BindProperty] public string? Gender { get; set; }
 
     public string? ErrorMessage { get; set; }
 
@@ -62,8 +61,7 @@ public class CreateRaceModel(RacehubContext context, IWebHostEnvironment env) : 
             AvailableSlots = AvailableSlots,
             Status = Status,
             Category = SelectedCategories.Count > 0 ? string.Join(", ", SelectedCategories) : null,
-            Image = imagePath,
-            Gender = Gender
+            Image = imagePath
         };
 
         context.TrailRunnings.Add(race);

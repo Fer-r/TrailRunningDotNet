@@ -25,7 +25,6 @@ public class RaceService(RacehubContext context)
                 r.Status,
                 r.Category,
                 r.Image,
-                r.Gender,
                 r.TrailRunningParticipants.Select(p => new RaceParticipantDto(
                     p.Id,
                     p.UserId,
@@ -58,7 +57,6 @@ public class RaceService(RacehubContext context)
                 r.Status,
                 r.Category,
                 r.Image,
-                r.Gender,
                 r.TrailRunningParticipants.Select(p => new RaceParticipantDto(
                     p.Id,
                     p.UserId,
@@ -87,8 +85,7 @@ public class RaceService(RacehubContext context)
             AvailableSlots = dto.AvailableSlots,
             Status = dto.Status ?? "open",
             Category = dto.Category,
-            Image = dto.Image,
-            Gender = dto.Gender
+            Image = dto.Image
         };
 
         context.TrailRunnings.Add(race);
@@ -114,7 +111,6 @@ public class RaceService(RacehubContext context)
         if (dto.Status != null) race.Status = dto.Status;
         if (dto.Category != null) race.Category = dto.Category;
         if (dto.Image != null) race.Image = dto.Image;
-        if (dto.Gender != null) race.Gender = dto.Gender;
 
         await context.SaveChangesAsync();
         return await GetByIdAsync(id);

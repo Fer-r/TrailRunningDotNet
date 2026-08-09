@@ -49,7 +49,6 @@ public partial class ParticipantService : IParticipantService
                     p.TrailRunning.Status,
                     p.TrailRunning.Category,
                     p.TrailRunning.Image,
-                    p.TrailRunning.Gender,
                     new List<RaceParticipantDto>()
                 )
             })
@@ -92,7 +91,6 @@ public partial class ParticipantService : IParticipantService
                     p.TrailRunning.Status,
                     p.TrailRunning.Category,
                     p.TrailRunning.Image,
-                    p.TrailRunning.Gender,
                     new List<RaceParticipantDto>()
                 )
             })
