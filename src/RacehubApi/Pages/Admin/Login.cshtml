@@ -131,6 +131,7 @@
         }
 
         <form method="post">
+            @Html.AntiForgeryToken()
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" asp-for="Email" class="form-control" placeholder="admin@racehub.com" required autofocus />
