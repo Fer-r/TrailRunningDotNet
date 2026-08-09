@@ -411,7 +411,7 @@ const RaceDetail = () => {
                     Plazas disponibles:
                   </span>
                   <span className="text-lg text-gray-900">
-                    {race?.available_slots}
+                    {Math.max(0, (race?.available_slots || 0) - (participants?.length || 0))}
                   </span>
                 </p>
 
