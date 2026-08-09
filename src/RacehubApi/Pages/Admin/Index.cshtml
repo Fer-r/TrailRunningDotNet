@@ -140,6 +140,7 @@
                         <th>Desnivel</th>
                         <th>Precio</th>
                         <th>Plazas</th>
+                        <th>Inscritos</th>
                         <th>Estado</th>
                         <th>Categoría</th>
                         <th>Imagen</th>
@@ -162,6 +163,9 @@
                                 <td>@(race.Unevenness?.ToString() ?? "—")</td>
                                 <td>@race.EntryFee €</td>
                                 <td>@race.AvailableSlots</td>
+                                <td>
+                                    <span style="font-weight: 600; color: @(race.TrailRunningParticipants.Count >= race.AvailableSlots ? "#e74c3c" : "#2ecc71");">@race.TrailRunningParticipants.Count</span> / @race.AvailableSlots
+                                </td>
                                 <td>
                                     @{
                                         var statusColor = race.Status switch
@@ -205,7 +209,7 @@
                     else
                     {
                         <tr>
-                            <td colspan="14" class="alert-info">No hay eventos registrados</td>
+                            <td colspan="15" class="alert-info">No hay eventos registrados</td>
                         </tr>
                     }
                 </tbody>

@@ -14,6 +14,7 @@ public class IndexModel(RacehubContext context) : PageModel
     public async Task OnGetAsync()
     {
         TrailRunnings = await context.TrailRunnings
+            .Include(r => r.TrailRunningParticipants)
             .AsNoTracking()
             .OrderByDescending(r => r.Date)
             .ToListAsync();
