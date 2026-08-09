@@ -11,7 +11,11 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/Admin", "AdminOnly");
+    options.Conventions.AllowAnonymousToPage("/Admin/Login");
+});
 
 // Configure EF Core SQLite
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
@@ -35,17 +39,22 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Configuración JWT Bearer
+// Configuración JWT Bearer y Cookies
 string jwtSecretKey = builder.Configuration["Jwt:SecretKey"] ?? "iauI/U@=tlT!.V#xo,&#z0K^T%CX/#ut+!yVY8)@<o3";
 string jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "RacehubApi";
 string jwtAudience = builder.Configuration["Jwt:Audience"] ?? "RacehubWeb";
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = "JWT_OR_COOKIE";
+    options.DefaultChallengeScheme = "JWT_OR_COOKIE";
 })
-.AddJwtBearer(options =>
+.AddCookie("Cookies", options =>
+{
+    options.LoginPath = "/Admin/Login";
+    options.AccessDeniedPath = "/Admin/Login";
+})
+.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -57,9 +66,24 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtAudience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey))
     };
+})
+.AddPolicyScheme("JWT_OR_COOKIE", "JWT_OR_COOKIE", options =>
+{
+    options.ForwardDefaultSelector = context =>
+    {
+        string authorization = context.Request.Headers["Authorization"];
+        if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith("Bearer "))
+            return JwtBearerDefaults.AuthenticationScheme;
+        
+        return "Cookies";
+    };
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => 
+        policy.RequireRole("ROLE_ADMIN"));
+});
 
 // Swagger / OpenAPI setup
 builder.Services.AddEndpointsApiExplorer();
