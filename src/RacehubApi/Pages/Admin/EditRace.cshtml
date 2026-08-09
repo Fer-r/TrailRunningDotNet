@@ -129,8 +129,16 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="category">Categoría</label>
-                    <input id="category" name="Category" type="text" value="@Model.Category">
+                    <label for="category">Categorías</label>
+                    <select id="category" name="SelectedCategories" multiple style="height: 120px;">
+                        <option value="Trail Medio" selected="@(Model.SelectedCategories != null && Model.SelectedCategories.Contains("Trail Medio"))">Trail Medio</option>
+                        <option value="Ultra Trail" selected="@(Model.SelectedCategories != null && Model.SelectedCategories.Contains("Ultra Trail"))">Ultra Trail</option>
+                        <option value="Maratón de Montaña" selected="@(Model.SelectedCategories != null && Model.SelectedCategories.Contains("Maratón de Montaña"))">Maratón de Montaña</option>
+                        <option value="Trail Costero" selected="@(Model.SelectedCategories != null && Model.SelectedCategories.Contains("Trail Costero"))">Trail Costero</option>
+                        <option value="Trail Corto" selected="@(Model.SelectedCategories != null && Model.SelectedCategories.Contains("Trail Corto"))">Trail Corto</option>
+                        <option value="Trail Técnico" selected="@(Model.SelectedCategories != null && Model.SelectedCategories.Contains("Trail Técnico"))">Trail Técnico</option>
+                    </select>
+                    <small>Mantén pulsado Ctrl para seleccionar varias</small>
                 </div>
                 <div class="form-group">
                     <label for="gender">Género *</label>

@@ -17,7 +17,7 @@ public class CreateRaceModel(RacehubContext context, IWebHostEnvironment env) : 
     [BindProperty] public int EntryFee { get; set; }
     [BindProperty] public int AvailableSlots { get; set; } = 100;
     [BindProperty] public string Status { get; set; } = "open";
-    [BindProperty] public string? Category { get; set; }
+    [BindProperty] public List<string> SelectedCategories { get; set; } = new();
     [BindProperty] public IFormFile? ImageFile { get; set; }
     [BindProperty] public string? Gender { get; set; }
 
@@ -61,7 +61,7 @@ public class CreateRaceModel(RacehubContext context, IWebHostEnvironment env) : 
             EntryFee = EntryFee,
             AvailableSlots = AvailableSlots,
             Status = Status,
-            Category = Category,
+            Category = SelectedCategories.Count > 0 ? string.Join(", ", SelectedCategories) : null,
             Image = imagePath,
             Gender = Gender
         };

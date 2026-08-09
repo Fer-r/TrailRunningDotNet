@@ -82,7 +82,7 @@ public static class SeedData
                 EntryFee = 110,
                 AvailableSlots = 400,
                 Status = "open",
-                Category = "Ultra"
+                Category = "Ultra Trail"
             },
             new TrailRunning
             {
@@ -96,7 +96,7 @@ public static class SeedData
                 EntryFee = 95,
                 AvailableSlots = 350,
                 Status = "open",
-                Category = "Ultra"
+                Category = "Ultra Trail"
             },
             new TrailRunning
             {
@@ -110,7 +110,7 @@ public static class SeedData
                 EntryFee = 130,
                 AvailableSlots = 300,
                 Status = "open",
-                Category = "Ultra"
+                Category = "Ultra Trail"
             },
             new TrailRunning
             {
@@ -124,7 +124,7 @@ public static class SeedData
                 EntryFee = 70,
                 AvailableSlots = 500,
                 Status = "open",
-                Category = "Trail"
+                Category = "Trail Medio"
             },
             new TrailRunning
             {
@@ -138,7 +138,7 @@ public static class SeedData
                 EntryFee = 115,
                 AvailableSlots = 450,
                 Status = "open",
-                Category = "Ultra"
+                Category = "Ultra Trail"
             },
             new TrailRunning
             {
@@ -152,7 +152,7 @@ public static class SeedData
                 EntryFee = 60,
                 AvailableSlots = 600,
                 Status = "open",
-                Category = "Maratón"
+                Category = "Maratón de Montaña"
             }
         };
         context.TrailRunnings.AddRange(races);
