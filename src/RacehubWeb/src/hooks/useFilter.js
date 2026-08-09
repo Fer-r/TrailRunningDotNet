@@ -53,6 +53,14 @@ export const useFilter = (races) => {
     );
   };
 
+  const filterRacesByGender = (races) => {
+    if (!user || !user.gender) return races;
+    const userGenderShort = user.gender.toLowerCase().startsWith("m") ? "m" : "f";
+    return races.filter(
+      (race) => !race.gender || race.gender.toLowerCase() === "all" || race.gender.toLowerCase() === userGenderShort
+    );
+  };
+
   const applyFilters = (racesToFilter) => {
     let filteredRaces = [...racesToFilter];
 
@@ -73,6 +81,9 @@ export const useFilter = (races) => {
         selectedCategories
       );
     }
+    
+    filteredRaces = filterRacesByGender(filteredRaces);
+    
     return filteredRaces;
   };
   const sortRacesByDistance = async () => {

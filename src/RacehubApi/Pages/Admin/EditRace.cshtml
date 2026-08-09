@@ -83,6 +83,14 @@
 
         <form method="post" enctype="multipart/form-data">
             <input type="hidden" name="RaceId" value="@Model.RaceId" />
+            
+            @if (Model.HasParticipants)
+            {
+                <div class="alert-warning" style="background: #fff3cd; color: #856404; padding: 10px; border-radius: 4px; margin-bottom: 20px;">
+                    <i class="fas fa-exclamation-triangle"></i> Esta carrera tiene @Model.ParticipantCount participantes. Algunos campos están bloqueados por seguridad.
+                </div>
+            }
+
             <div class="form-grid">
                 <div class="form-group full">
                     <label for="name">Nombre *</label>
@@ -93,12 +101,12 @@
                     <textarea id="description" name="Description" rows="3">@Model.Description</textarea>
                 </div>
                 <div class="form-group">
-                    <label for="date">Fecha *</label>
-                    <input id="date" name="Date" type="date" required value="@Model.Date.ToString("yyyy-MM-dd")">
+                    <label for="date">Fecha y Hora @(!Model.HasParticipants ? "*" : "")</label>
+                    <input id="date" name="Date" type="datetime-local" required="@(!Model.HasParticipants)" value="@Model.Date.ToString("yyyy-MM-ddTHH:mm")" @(Model.HasParticipants ? "readonly" : "")>
                 </div>
                 <div class="form-group">
-                    <label for="distanceKm">Distancia (km) *</label>
-                    <input id="distanceKm" name="DistanceKm" type="number" min="1" required value="@Model.DistanceKm">
+                    <label for="distanceKm">Distancia (km) @(!Model.HasParticipants ? "*" : "")</label>
+                    <input id="distanceKm" name="DistanceKm" type="number" min="1" required="@(!Model.HasParticipants)" value="@Model.DistanceKm" @(Model.HasParticipants ? "readonly" : "")>
                 </div>
                 <div class="form-group">
                     <label for="location">Ubicación *</label>
@@ -109,12 +117,12 @@
                     <input id="coordinates" name="Coordinates" type="text" value="@Model.Coordinates">
                 </div>
                 <div class="form-group">
-                    <label for="unevenness">Desnivel (m)</label>
-                    <input id="unevenness" name="Unevenness" type="number" min="0" value="@Model.Unevenness">
+                    <label for="unevenness">Desnivel positivo (m)</label>
+                    <input id="unevenness" name="Unevenness" type="number" min="0" value="@Model.Unevenness" @(Model.HasParticipants ? "readonly" : "")>
                 </div>
                 <div class="form-group">
-                    <label for="entryFee">Precio inscripción (€) *</label>
-                    <input id="entryFee" name="EntryFee" type="number" min="0" required value="@Model.EntryFee">
+                    <label for="entryFee">Precio inscripción (€) @(!Model.HasParticipants ? "*" : "")</label>
+                    <input id="entryFee" name="EntryFee" type="number" min="0" required="@(!Model.HasParticipants)" value="@Model.EntryFee" @(Model.HasParticipants ? "readonly" : "")>
                 </div>
                 <div class="form-group">
                     <label for="availableSlots">Plazas disponibles *</label>
@@ -141,11 +149,13 @@
                     <small>Mantén pulsado Ctrl para seleccionar varias</small>
                 </div>
                 <div class="form-group">
-                    <label for="gender">Género *</label>
-                    <select id="gender" name="Gender">
+                    <label for="gender">Género @(!Model.HasParticipants ? "*" : "")</label>
+                    <select id="gender" name="Gender" disabled="@(Model.HasParticipants)">
+                        <option value="all" selected="@(Model.Gender == "all" || string.IsNullOrEmpty(Model.Gender))">Mixta (All)</option>
                         <option value="m" selected="@(Model.Gender == "m")">Male</option>
                         <option value="f" selected="@(Model.Gender == "f")">Female</option>
                     </select>
+                    @if (Model.HasParticipants) { <input type="hidden" name="Gender" value="@Model.Gender" /> }
                 </div>
                 <div class="form-group full">
                     <label>Imagen de la carrera</label>

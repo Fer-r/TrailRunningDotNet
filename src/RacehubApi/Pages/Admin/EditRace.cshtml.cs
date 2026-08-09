@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using RacehubApi.Data;
 using RacehubApi.Models;
 
@@ -24,10 +25,14 @@ public class EditRaceModel(RacehubContext context, IWebHostEnvironment env) : Pa
 
     public string? CurrentImage { get; set; }
     public string? ErrorMessage { get; set; }
+    public bool HasParticipants { get; set; }
+    public int ParticipantCount { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int id)
     {
-        var race = await context.TrailRunnings.FindAsync(id);
+        var race = await context.TrailRunnings
+            .Include(r => r.TrailRunningParticipants)
+            .FirstOrDefaultAsync(r => r.Id == id);
         if (race == null) return RedirectToPage("Index");
 
         RaceId = race.Id;
@@ -47,16 +52,29 @@ public class EditRaceModel(RacehubContext context, IWebHostEnvironment env) : Pa
         }
         CurrentImage = race.Image;
         Gender = race.Gender;
+        HasParticipants = race.TrailRunningParticipants.Any();
+        ParticipantCount = race.TrailRunningParticipants.Count;
 
         return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
-        var race = await context.TrailRunnings.FindAsync(RaceId);
+        var race = await context.TrailRunnings
+            .Include(r => r.TrailRunningParticipants)
+            .FirstOrDefaultAsync(r => r.Id == RaceId);
         if (race == null)
         {
             ErrorMessage = "Carrera no encontrada.";
+            return Page();
+        }
+
+        HasParticipants = race.TrailRunningParticipants.Any();
+        ParticipantCount = race.TrailRunningParticipants.Count;
+
+        if (AvailableSlots < ParticipantCount)
+        {
+            ErrorMessage = $"No puedes reducir las plazas por debajo del número de inscritos ({ParticipantCount}).";
             return Page();
         }
 
@@ -86,16 +104,20 @@ public class EditRaceModel(RacehubContext context, IWebHostEnvironment env) : Pa
 
         race.Name = Name;
         race.Description = Description;
-        race.Date = Date;
-        race.DistanceKm = DistanceKm;
         race.Location = Location;
         race.Coordinates = Coordinates;
-        race.Unevenness = Unevenness;
-        race.EntryFee = EntryFee;
         race.AvailableSlots = AvailableSlots;
         race.Status = Status;
         race.Category = SelectedCategories.Count > 0 ? string.Join(", ", SelectedCategories) : null;
-        race.Gender = Gender;
+
+        if (!HasParticipants)
+        {
+            race.Date = Date;
+            race.DistanceKm = DistanceKm;
+            race.Unevenness = Unevenness;
+            race.EntryFee = EntryFee;
+            race.Gender = Gender;
+        }
 
         await context.SaveChangesAsync();
 

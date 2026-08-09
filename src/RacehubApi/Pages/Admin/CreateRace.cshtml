@@ -145,6 +145,7 @@
                 <div class="form-group">
                     <label for="gender">Género *</label>
                     <select id="gender" name="Gender">
+                        <option value="all" selected="@(Model.Gender == "all" || string.IsNullOrEmpty(Model.Gender))">Mixta (All)</option>
                         <option value="m" selected="@(Model.Gender == "m")">Male</option>
                         <option value="f" selected="@(Model.Gender == "f")">Female</option>
                     </select>

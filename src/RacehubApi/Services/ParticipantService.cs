@@ -115,6 +115,15 @@ public partial class ParticipantService : IParticipantService
             throw new InvalidOperationException("La carrera ya no tiene plazas disponibles.");
         }
 
+        if (!string.IsNullOrEmpty(race.Gender) && !string.IsNullOrEmpty(user.Gender))
+        {
+            var userGenderShort = user.Gender.ToLower().StartsWith("m") ? "m" : "f";
+            if (race.Gender.ToLower() != "all" && race.Gender.ToLower() != userGenderShort)
+            {
+                throw new InvalidOperationException("El género del usuario no coincide con el de la carrera.");
+            }
+        }
+
         var existingDorsals = race.TrailRunningParticipants.Select(p => p.Dorsal).ToHashSet();
         
         var rand = new Random();
