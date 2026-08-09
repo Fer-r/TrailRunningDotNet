@@ -110,6 +110,11 @@ public partial class ParticipantService : IParticipantService
         var user = await _context.Users.FindAsync(dto.User);
         if (user == null) return null;
 
+        if (race.TrailRunningParticipants.Count >= race.AvailableSlots)
+        {
+            throw new InvalidOperationException("La carrera ya no tiene plazas disponibles.");
+        }
+
         var existingDorsals = race.TrailRunningParticipants.Select(p => p.Dorsal).ToHashSet();
         
         var rand = new Random();

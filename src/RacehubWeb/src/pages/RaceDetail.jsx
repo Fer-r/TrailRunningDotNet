@@ -411,7 +411,10 @@ const RaceDetail = () => {
                     Plazas disponibles:
                   </span>
                   <span className="text-lg text-gray-900">
-                    {Math.max(0, (race?.available_slots || 0) - (participants?.length || 0))}
+                    {(() => {
+                      const remaining = Math.max(0, (race?.available_slots || 0) - (participants?.length || 0));
+                      return remaining === 0 ? <span className="text-red-500 font-bold">Agotadas</span> : remaining;
+                    })()}
                   </span>
                 </p>
 
@@ -427,10 +430,10 @@ const RaceDetail = () => {
                   <div className="mt-6">
                     <button
                       onClick={handleJoinRaceButton}
-                      disabled={isJoining || loading || race?.status !== "open"}
+                      disabled={isJoining || loading || race?.status !== "open" || (!joined && Math.max(0, (race?.available_slots || 0) - (participants?.length || 0)) <= 0)}
                       className={`w-full px-6 py-3 rounded-lg text-white font-semibold transition-all duration-200 
                         ${
-                          isJoining || race?.status !== "open"
+                          isJoining || race?.status !== "open" || (!joined && Math.max(0, (race?.available_slots || 0) - (participants?.length || 0)) <= 0)
                             ? "bg-gray-400 cursor-not-allowed"
                             : joined
                             ? "bg-red-500 hover:bg-red-600"
@@ -443,6 +446,8 @@ const RaceDetail = () => {
                         ? "Cancelar registro"
                         : race?.status !== "open"
                         ? "Inscripciones cerradas"
+                        : Math.max(0, (race?.available_slots || 0) - (participants?.length || 0)) <= 0
+                        ? "Plazas agotadas"
                         : "Unirse a la carrera"}
                     </button>
                     {joinMessage && (

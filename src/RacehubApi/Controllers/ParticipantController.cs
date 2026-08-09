@@ -35,10 +35,17 @@ public class ParticipantController : ControllerBase
     [Authorize]
     public async Task<ActionResult<ParticipantDto>> Register([FromBody] CreateParticipantDto request)
     {
-        var participant = await _participantService.RegisterAsync(request);
-        if (participant == null) return BadRequest(new { error = "Invalid race or user" });
-        
-        return CreatedAtAction(nameof(GetById), new { id = participant.Id }, participant);
+        try 
+        {
+            var participant = await _participantService.RegisterAsync(request);
+            if (participant == null) return BadRequest(new { error = "Invalid race or user" });
+            
+            return CreatedAtAction(nameof(GetById), new { id = participant.Id }, participant);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpPut("{id}/edit")]
