@@ -16,6 +16,9 @@ public class RegisterModel(RacehubContext context) : PageModel
     [BindProperty]
     public string Name { get; set; } = "";
 
+    [BindProperty]
+    public string? Gender { get; set; }
+
     public string? ErrorMessage { get; set; }
 
     public void OnGet()
@@ -40,6 +43,7 @@ public class RegisterModel(RacehubContext context) : PageModel
             Email = Email,
             Password = BCrypt.Net.BCrypt.HashPassword(Password),
             Name = Name,
+            Gender = Gender,
             Roles = "[\"ROLE_USER\"]"
         };
 

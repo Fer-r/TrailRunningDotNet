@@ -35,6 +35,16 @@
                 <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                        id="email" name="Email" type="email" required value="@Model.Email">
             </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="gender">Género</label>
+                <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white" 
+                        id="gender" name="Gender">
+                    <option value="">Prefiero no decirlo</option>
+                    <option value="Male" selected="@(Model.Gender == "Male")">Hombre (m)</option>
+                    <option value="Female" selected="@(Model.Gender == "Female")">Mujer (f)</option>
+                </select>
+                <p class="text-xs text-gray-500 mt-1">Se usará para generar tu avatar en el perfil.</p>
+            </div>
             <div class="mb-6">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Contraseña</label>
                 <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
